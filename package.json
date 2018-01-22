@@ -1,0 +1,19 @@
+{
+  "name": "kwc-lineclip",
+  "version": "0.0.1",
+  "description": "Line clipping based on the algorithm by Kodituwakka, Wijeweera & Chamikara.",
+  "main": "src/index.js",
+  "scripts": {
+    "benchmark": "node benchmark.js",
+    "test": "node test/test.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "benchmark": "^2.1.4",
+    "liang-barsky": "^1.0.1",
+    "lineclip": "^1.1.5",
+    "rollup": "^0.54.1",
+    "tape": "^4.8.0"
+  }
+}
