@@ -1,29 +1,29 @@
 export default function (points, bbox) {
-  let pi, m, c, i, x, y, out, xCoords, yCoords;
+  let pi, m, c, i, xCoords, yCoords
   const len = points.length
-  let part = [];
-  const result = [];
+  let part = []
+  const result = []
 
   for (pi = 1; pi < len; pi++) {
 
     xCoords = [points[pi - 1][0], points[pi][0]]
     yCoords = [points[pi - 1][1], points[pi][1]]
+
     // non-vertical
-    if (xCoords[0] !== xCoords[1]) {  
-     
+    if (xCoords[0] !== xCoords[1]) {
+
       // non-vertical & non-horizontal
       if (yCoords[0] !== yCoords[1]) {
         m = (yCoords[0] - yCoords[1]) / (xCoords[0] - xCoords[1])
         c = (xCoords[0] * yCoords[1] - xCoords[1] * yCoords[0]) / (xCoords[0] - xCoords[1])
-        
-        for (i = 0; i < 2; i++) {
 
+        for (i = 0; i < 2; i++) {
           if (xCoords[i] < bbox[0]) {
             xCoords[i] = bbox[0]
             yCoords[i] = m * bbox[0] + c
           } else if (xCoords[i] > bbox[2]) {
             xCoords[i] = bbox[2]
-            yCoords[i] = m * bbox[2] + c         
+            yCoords[i] = m * bbox[2] + c
           }
 
           if (yCoords[i] < bbox[1]) {
@@ -31,95 +31,83 @@ export default function (points, bbox) {
             yCoords[i] = bbox[1]
           } else if (yCoords[i] > bbox[3]) {
             xCoords[i] = (bbox[3] - c) / m
-            yCoords[i] = bbox[3]          
+            yCoords[i] = bbox[3]
           }
         }
-
         if ((xCoords[0] - xCoords[1] < 1) && (xCoords[1] - xCoords[0] < 1)) {
-          if (part.length === 0) result.push(part)
-          part = []
+          if (points[pi - 1][0] === xCoords[0]) finishLine(result, part)
+          else part = includeInResult(result, part, xCoords, yCoords)
         } else {
-          if (part.length === 0) {
-            part = [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
-          } else if (part[1][0] !== xCoords[0] || part[1][1] !== yCoords[0]) {
-            result.push(part)
-            part = [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
-          } else {
-            part.push([xCoords[1], yCoords[1]])
-          }
+          part = includeInResult(result, part, xCoords, yCoords)
         }
 
       } else { // non-vertical but horizontal segment
-        if (a[1] <= bbox[1] || a[1] >= bbox[3]) {
-          if (part.length === 0) result.push(part)
-          part = []
+        if (yCoords[0] <= bbox[1] || yCoords[0] >= bbox[3]) {
+          finishLine(result, part)
         } else {
-          const out = [a, b]
-
-           for (i = 0; i < 2; i++) {
-            if (i === 0) x = a[0], y = a[1]
-            else x = b[0], y = b[1]
-            if (x[0] < bbox[0]) { 
-              x[0] = bbox[0]
-            } else if (x[0] > bbox[2]) {
-              x[0] = bbox[2]
+          for (i = 0; i < 2; i++) {
+            if (xCoords[0] < bbox[0]) {
+              xCoords[0] = bbox[0]
+            } else if (xCoords[0] > bbox[2]) {
+              xCoords[0] = bbox[2]
             }
-            out[i][0] = x
-            out[i][1] = y
           }
 
-          if ((a[0] - b[0] < 1) && (b[0] - a[0] < 1)) {
-            result.push(part)
+          if ((xCoords[0] - xCoords[1] < 1) && (xCoords[1] - xCoords[0] < 1)) {
+            finishLine(result, part)
           } else {
-            if (part.length === 0) {
-              part = [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
-            } else if (part[1][0] !== xCoords[0] || part[1][1] !== yCoords[0]) {
-              result.push(part)
-              part = [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
-            } else {
-              part.push([xCoords[1], yCoords[1]])
-            }
+            part = includeInResult(result, part, xCoords, yCoords)
           }
         }
       }
-    } else { 
-      if (a[1] === b[1]) {
-        if (a[1] <= bbox[1] || a[1] >= bbox[3]) {
-          if (part.length === 0) result.push(part)
-          part = []
-        } else if (a[0] <= bbox[0] || a[0] >= bbox[2]) {
-          if (part.length === 0) result.push(part)
-          part = []
+    } else {
+      if (yCoords[0] === yCoords[1]) {
+        if (yCoords[0] <= bbox[1] || yCoords[0] >= bbox[3]) {
+          finishLine(result, part)
+        } else if (xCoords[0] <= bbox[0] || xCoords[0] >= bbox[2]) {
+          finishLine(result, part)
         } else {
-          part.push([a, b])
+          part = includeInResult(result, part, xCoords, yCoords)
         }
-      } else if (a[0] <= bbox[0] || a[0] >= bbox[2]) {
-        if (part.length === 0) result.push(part)
-        part = []
+      } else if (xCoords[0] <= bbox[0] || xCoords[0] >= bbox[2]) {
+        finishLine(result, part)
       } else {
-          const out = [a, b]
-          for (i = 0; i < 2; i++) {
-            if (i === 0) x = a[0], y = a[1]
-            else x = b[0], y = b[1]
-            if (y[1] < bbox[1]) { 
-              y[1] = bbox[1]
-            } else if (y[1] > bbox[3]) {
-              y[1] = bbox[3]
-            }
-            out[i][0] = x
-            out[i][1] = y
+
+        for (i = 0; i < 2; i++) {
+          if (yCoords[i] < bbox[1]) {
+            yCoords[i]  = bbox[1]
+          } else if (yCoords[i] > bbox[3]) {
+            yCoords[i]  = bbox[3]
           }
-          if (a[1] - b[1] < 1 && b[1] - a[1] < 1) {
-            if (part.length === 0) result.push(part)
-            part = []
-          } else {
-            part.push(out)
-          }
+        }
+        if (yCoords[0] - yCoords[1] < 1 && yCoords[1] - yCoords[0] < 1) {
+          finishLine(result, part)
+        } else {
+          part = [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
+          result.push(part)
+          part = []
+        }
       }
     }
-
   }
   result.push(part)
   return result
 }
 
+function includeInResult(result, part, xCoords, yCoords) {
+  if (part.length === 0) {
+    part = [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
+
+  } else if (part[1][0] !== xCoords[0] || part[1][1] !== yCoords[0]) {
+    result.push(part)
+    part = [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
+  } else {
+    part.push([xCoords[1], yCoords[1]])
+  }
+  return part
+}
+
+function finishLine(result, part) {
+  if (part.length === 0) result.push(part)
+  part = []
+}
