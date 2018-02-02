@@ -4,8 +4,9 @@
   "description": "Line clipping based on the algorithm by Kodituwakka, Wijeweera & Chamikara.",
   "main": "src/index.js",
   "scripts": {
-    "benchmark": "node benchmark.js",
-    "test": "node test/test.js"
+    "bench": "node benchmark.js",
+    "build": "rollup src/index.js --o dist/kwc-lineclip.js --f cjs", 
+    "test": "npm run build && node test/test.js"
   },
   "author": "",
   "license": "MIT",
