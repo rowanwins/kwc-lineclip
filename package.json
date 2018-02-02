@@ -11,6 +11,8 @@
   "license": "MIT",
   "devDependencies": {
     "benchmark": "^2.1.4",
+    "eslint": "^4.16.0",
+    "eslint-config-mourner": "^2.0.3",
     "liang-barsky": "^1.0.1",
     "lineclip": "^1.1.5",
     "rollup": "^0.54.1",
