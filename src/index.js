@@ -35,8 +35,12 @@ export default function (points, bbox) {
           }
         }
         if ((xCoords[0] - xCoords[1] < 1) && (xCoords[1] - xCoords[0] < 1)) {
-          if (points[pi - 1][0] === xCoords[0]) finishLine(result, part)
-          else part = includeInResult(result, part, xCoords, yCoords)
+          // Have had to digress from the algorithm here otherwise
+          // a segment following a vertical segment would fail...
+          if (xCoords[0] === bbox[3] && xCoords[1] === bbox[3]) finishLine(result, part)
+          else {
+            part = includeInResult(result, part, xCoords, yCoords)
+          }
         } else {
           part = includeInResult(result, part, xCoords, yCoords)
         }
@@ -46,13 +50,12 @@ export default function (points, bbox) {
           finishLine(result, part)
         } else {
           for (i = 0; i < 2; i++) {
-            if (xCoords[0] < bbox[0]) {
-              xCoords[0] = bbox[0]
-            } else if (xCoords[0] > bbox[2]) {
-              xCoords[0] = bbox[2]
+            if (xCoords[i] < bbox[0]) {
+              xCoords[i] = bbox[0]
+            } else if (xCoords[i] > bbox[2]) {
+              xCoords[i] = bbox[2]
             }
           }
-
           if ((xCoords[0] - xCoords[1] < 1) && (xCoords[1] - xCoords[0] < 1)) {
             finishLine(result, part)
           } else {
@@ -90,7 +93,7 @@ export default function (points, bbox) {
       }
     }
   }
-  result.push(part)
+  if (part.length > 0) result.push(part)
   return result
 }
 
@@ -108,6 +111,6 @@ function includeInResult(result, part, xCoords, yCoords) {
 }
 
 function finishLine(result, part) {
-  if (part.length === 0) result.push(part)
+  if (part.length > 0) result.push(part)
   part = []
 }

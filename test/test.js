@@ -79,3 +79,34 @@ test('Vertical segment in longer line', t => {
 
   t.end()
 })
+
+test('Horizontal segment', t => {
+
+  var out = kwc([[1, 1], [10, 1]], bbox)
+  t.equal(out[0][0][0], 1)
+  t.equal(out[0][0][1], 1)
+  t.equal(out[0][1][0], 5)
+  t.equal(out[0][1][1], 1)
+
+  t.end()
+})
+
+test('Horizontal segment in longer line', t => {
+
+  var out = kwc([[10, 2], [1, 1], [10, 1]], bbox)
+  t.equal(out[0][0][0], 5)
+  t.equal(out[0][0][1], 1.4444444444444444)
+  t.equal(out[0][1][0], 1)
+  t.equal(out[0][1][1], 1)
+  t.equal(out[0][2][0], 5)
+  t.equal(out[0][2][1], 1)
+
+  t.end()
+})
+
+test('Completely outside', t => {
+
+  var out = kwc([[20, 20], [40, 40]], bbox)
+  t.deepEqual(out, [])
+  t.end()
+})
