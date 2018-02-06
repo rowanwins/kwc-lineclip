@@ -1,14 +1,19 @@
 {
   "name": "kwc-lineclip",
   "version": "0.0.1",
-  "description": "Line clipping based on the algorithm by Kodituwakka, Wijeweera & Chamikara.",
-  "main": "src/index.js",
+  "description": "Polyline clipping based on the algorithm by Kodituwakka, Wijeweera & Chamikara.",
+  "main": "dist/kwc-lineclip.js",
+  "module": "src/index.js",
   "scripts": {
     "bench": "npm run build && node benchmark.js",
     "build": "rollup src/index.js --o dist/kwc-lineclip.js --f cjs", 
     "test": "npm run build && node test/test.js"
   },
-  "author": "",
+  "author": "Rowan Winsemius",
+  "repository": {
+    "url": "git+https://github.com/rowanwins/kwc-lineclip.git",
+    "type": "git"
+  },
   "license": "MIT",
   "devDependencies": {
     "benchmark": "^2.1.4",
