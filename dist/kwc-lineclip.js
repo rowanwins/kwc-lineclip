@@ -36,13 +36,8 @@ function index (points, bbox) {
             yCoords[i] = bbox[3];
           }
         }
-        if ((xCoords[0] - xCoords[1] < 1) && (xCoords[1] - xCoords[0] < 1)) {
-          // Have had to digress from the algorithm here otherwise
-          // a segment following a vertical segment would fail...
-          if (xCoords[0] === bbox[3] && xCoords[1] === bbox[3]) finishLine(result, part);
-          else {
-            part = includeInResult(result, part, xCoords, yCoords);
-          }
+        if ((xCoords[0] - xCoords[1] === 0) && (xCoords[1] - xCoords[0] === 0)) {
+          finishLine(result, part);
         } else {
           part = includeInResult(result, part, xCoords, yCoords);
         }
@@ -58,7 +53,7 @@ function index (points, bbox) {
               xCoords[i] = bbox[2];
             }
           }
-          if ((xCoords[0] - xCoords[1] < 1) && (xCoords[1] - xCoords[0] < 1)) {
+          if ((xCoords[0] - xCoords[1] === 0) && (xCoords[1] - xCoords[0] === 0)) {
             finishLine(result, part);
           } else {
             part = includeInResult(result, part, xCoords, yCoords);
@@ -85,7 +80,7 @@ function index (points, bbox) {
             yCoords[i]  = bbox[3];
           }
         }
-        if (yCoords[0] - yCoords[1] < 1 && yCoords[1] - yCoords[0] < 1) {
+        if (yCoords[0] - yCoords[1] === 0 && yCoords[1] - yCoords[0] === 0) {
           finishLine(result, part);
         } else {
           part = [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]];
@@ -102,7 +97,6 @@ function index (points, bbox) {
 function includeInResult(result, part, xCoords, yCoords) {
   if (part.length === 0) {
     part = [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]];
-
   } else if (part[1][0] !== xCoords[0] || part[1][1] !== yCoords[0]) {
     result.push(part);
     part = [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]];

@@ -105,8 +105,19 @@ test('Horizontal segment in longer line', t => {
 })
 
 test('Completely outside', t => {
-
   var out = kwc([[20, 20], [40, 40]], bbox)
+  t.deepEqual(out, [])
+  t.end()
+})
+
+test('Completely outside - horizontal', t => {
+  var out = kwc([[20, 20], [40, 20]], bbox)
+  t.deepEqual(out, [])
+  t.end()
+})
+
+test('Completely outside - vertical', t => {
+  var out = kwc([[20, 20], [20, 40]], bbox)
   t.deepEqual(out, [])
   t.end()
 })
