@@ -8,7 +8,7 @@ SINGLE SEGMENT TEST
 kwc x 4,881,087 ops/sec ±10.38% (52 runs sampled)
 liang-barsky (non-destructive) x 8,973,138 ops/sec ±7.87% (55 runs sampled)
 mapbox/lineclip x 3,654,875 ops/sec ±12.99% (53 runs sampled)
-- Fastest is kwc
+- Fastest is liang-biarsky
 
 MULTIPLE SEGMENT MULTIPLE OUTPUT TEST
 kwc x 3,402,363 ops/sec ±9.29% (63 runs sampled)
@@ -20,3 +20,4 @@ kwc x 586,941 ops/sec ±8.88% (66 runs sampled)
 mapbox/lineclip x 357,906 ops/sec ±12.96% (50 runs sampled)
 - Fastest is kwc
 ````
+Kwc was initially faster than liang-barsky until I amended this algorithm to support multiple segments.
