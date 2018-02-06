@@ -31,4 +31,5 @@ kwc x 586,941 ops/sec ±8.88% (66 runs sampled)
 mapbox/lineclip x 357,906 ops/sec ±12.96% (50 runs sampled)
 - Fastest is kwc
 ````
-kwc-lineclip did outperform liang-biarsky unti lit was adapted to cater for lines with multiple segments.
+
+kwc-lineclip was initially faster than liang-barsky until I amended the algorithm to support multiple segments.
