@@ -4,6 +4,11 @@ export default function (points, bbox) {
   let part = []
   const result = []
 
+  const minx = bbox[0]
+  const maxx = bbox[2]
+  const miny = bbox[1]
+  const maxy = bbox[3]
+
   for (pi = 1; pi < len; pi++) {
 
     xCoords = [points[pi - 1][0], points[pi][0]]
@@ -11,79 +16,75 @@ export default function (points, bbox) {
 
     // non-vertical
     if (xCoords[0] !== xCoords[1]) {
-
       // non-vertical & non-horizontal
       if (yCoords[0] !== yCoords[1]) {
         m = (yCoords[0] - yCoords[1]) / (xCoords[0] - xCoords[1])
         c = (xCoords[0] * yCoords[1] - xCoords[1] * yCoords[0]) / (xCoords[0] - xCoords[1])
 
         for (i = 0; i < 2; i++) {
-          if (xCoords[i] < bbox[0]) {
-            xCoords[i] = bbox[0]
-            yCoords[i] = m * bbox[0] + c
-          } else if (xCoords[i] > bbox[2]) {
-            xCoords[i] = bbox[2]
-            yCoords[i] = m * bbox[2] + c
+          if (xCoords[i] < minx) {
+            xCoords[i] = minx
+            yCoords[i] = m * minx + c
+          } else if (xCoords[i] > maxx) {
+            xCoords[i] = maxx
+            yCoords[i] = m * maxx + c
           }
 
-          if (yCoords[i] < bbox[1]) {
-            xCoords[i] = (bbox[1] - c) / m
-            yCoords[i] = bbox[1]
-          } else if (yCoords[i] > bbox[3]) {
-            xCoords[i] = (bbox[3] - c) / m
-            yCoords[i] = bbox[3]
+          if (yCoords[i] < miny) {
+            xCoords[i] = (miny - c) / m
+            yCoords[i] = miny
+          } else if (yCoords[i] > maxy) {
+            xCoords[i] = (maxy - c) / m
+            yCoords[i] = maxy
           }
         }
         if ((xCoords[0] - xCoords[1] === 0) && (xCoords[1] - xCoords[0] === 0)) {
-          finishLine(result, part)
+          part = finishLine(result, part)
         } else {
-          part = includeInResult(result, part, xCoords, yCoords)
+          part = includeInResult(result, part, xCoords, yCoords, bbox)
         }
 
       } else { // non-vertical but horizontal segment
-        if (yCoords[0] <= bbox[1] || yCoords[0] >= bbox[3]) {
-          finishLine(result, part)
+        if (yCoords[0] < miny || yCoords[0] > maxy) {
+          part = finishLine(result, part)
         } else {
           for (i = 0; i < 2; i++) {
-            if (xCoords[i] < bbox[0]) {
-              xCoords[i] = bbox[0]
-            } else if (xCoords[i] > bbox[2]) {
-              xCoords[i] = bbox[2]
+            if (xCoords[i] < minx) {
+              xCoords[i] = minx
+            } else if (xCoords[i] > maxx) {
+              xCoords[i] = maxx
             }
           }
           if ((xCoords[0] - xCoords[1] === 0) && (xCoords[1] - xCoords[0] === 0)) {
-            finishLine(result, part)
+            part = finishLine(result, part)
           } else {
-            part = includeInResult(result, part, xCoords, yCoords)
+            part = includeInResult(result, part, xCoords, yCoords, bbox)
           }
         }
       }
     } else {
       if (yCoords[0] === yCoords[1]) {
-        if (yCoords[0] <= bbox[1] || yCoords[0] >= bbox[3]) {
-          finishLine(result, part)
-        } else if (xCoords[0] <= bbox[0] || xCoords[0] >= bbox[2]) {
-          finishLine(result, part)
+        if (yCoords[0] < miny || yCoords[0] > maxy) {
+          part = finishLine(result, part)
+        } else if (xCoords[0] < minx || xCoords[0] > maxx) {
+          part = finishLine(result, part)
         } else {
-          part = includeInResult(result, part, xCoords, yCoords)
+          part = includeInResult(result, part, xCoords, yCoords, bbox)
         }
-      } else if (xCoords[0] <= bbox[0] || xCoords[0] >= bbox[2]) {
-        finishLine(result, part)
+      } else if (xCoords[0] < minx || xCoords[0] > maxx) {
+        part = finishLine(result, part)
       } else {
-
         for (i = 0; i < 2; i++) {
-          if (yCoords[i] < bbox[1]) {
-            yCoords[i]  = bbox[1]
-          } else if (yCoords[i] > bbox[3]) {
-            yCoords[i]  = bbox[3]
+          if (yCoords[i] < miny) {
+            yCoords[i]  = miny
+          } else if (yCoords[i] > maxy) {
+            yCoords[i]  = maxy
           }
         }
         if (yCoords[0] - yCoords[1] === 0 && yCoords[1] - yCoords[0] === 0) {
-          finishLine(result, part)
+          part = finishLine(result, part)
         } else {
-          part = [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
-          result.push(part)
-          part = []
+          part = includeInResult(result, part, xCoords, yCoords, bbox)
         }
       }
     }
@@ -94,10 +95,10 @@ export default function (points, bbox) {
 
 function includeInResult(result, part, xCoords, yCoords) {
   if (part.length === 0) {
-    part = [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
-  } else if (part[1][0] !== xCoords[0] || part[1][1] !== yCoords[0]) {
+    return [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
+  } else if (part[part.length - 1][0] !== xCoords[0] || part[part.length - 1][1] !== yCoords[0]) {
     result.push(part)
-    part = [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
+    return [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
   } else {
     part.push([xCoords[1], yCoords[1]])
   }
@@ -106,5 +107,5 @@ function includeInResult(result, part, xCoords, yCoords) {
 
 function finishLine(result, part) {
   if (part.length > 0) result.push(part)
-  part = []
+  return []
 }

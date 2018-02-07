@@ -16,19 +16,19 @@ This library is an implementation of the approach described in ['An Efficient Al
 I've checked the performance of this algorithm against implementations of the [Cohen-Sutherland](https://github.com/mapbox/lineclip) and a [Liang-barsky](https://github.com/w8r/liang-barsky) algorithms for clipping just one segment. Liang-barsky currently only supports a single segment clip.
 ````
 SINGLE SEGMENT TEST
-kwc x 4,881,087 ops/sec ±10.38% (52 runs sampled)
-liang-barsky (non-destructive) x 8,973,138 ops/sec ±7.87% (55 runs sampled)
-mapbox/lineclip x 3,654,875 ops/sec ±12.99% (53 runs sampled)
-- Fastest is liang-barsky
+kwc x 6,917,341 ops/sec ±8.76% (68 runs sampled)
+liang-barsky (non-destructive) x 11,150,680 ops/sec ±12.46% (56 runs sampled)
+mapbox/lineclip x 3,627,952 ops/sec ±15.14% (63 runs sampled)
+- Fastest is liang-barsky (non-destructive)
 
 MULTIPLE SEGMENT MULTIPLE OUTPUT TEST
-kwc x 3,402,363 ops/sec ±9.29% (63 runs sampled)
-mapbox/lineclip x 2,344,608 ops/sec ±8.11% (64 runs sampled)
+kwc x 4,050,016 ops/sec ±8.64% (67 runs sampled)
+mapbox/lineclip x 3,214,591 ops/sec ±6.04% (84 runs sampled)
 - Fastest is kwc
 
 LONGER LINE
-kwc x 586,941 ops/sec ±8.88% (66 runs sampled)
-mapbox/lineclip x 357,906 ops/sec ±12.96% (50 runs sampled)
+kwc x 669,633 ops/sec ±5.99% (84 runs sampled)
+mapbox/lineclip x 634,331 ops/sec ±4.26% (89 runs sampled)
 - Fastest is kwc
 ````
 
