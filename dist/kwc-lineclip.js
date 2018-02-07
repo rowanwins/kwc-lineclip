@@ -96,15 +96,18 @@ function index (points, bbox) {
 }
 
 function includeInResult(result, part, xCoords, yCoords) {
-  if (part.length === 0) {
-    return [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
-  } else if (part[part.length - 1][0] !== xCoords[0] || part[part.length - 1][1] !== yCoords[0]) {
-    result.push(part);
-    return [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
+  var len = part.length;
+  if (len > 0) {
+    if (part[len - 1][0] !== xCoords[0] || part[len - 1][1] !== yCoords[0]) {
+      result.push(part);
+      return [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
+    } else {
+      part.push([xCoords[1], yCoords[1]]);
+      return part
+    }
   } else {
-    part.push([xCoords[1], yCoords[1]]);
+    return [[xCoords[0], yCoords[0]], [xCoords[1], yCoords[1]]]
   }
-  return part
 }
 
 function finishLine(result, part) {
