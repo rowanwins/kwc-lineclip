@@ -41,14 +41,16 @@ function index (points, bbox) {
           }
         }
         if ((xCoords[0] - xCoords[1] === 0) && (xCoords[1] - xCoords[0] === 0)) {
-          part = finishLine(result, part);
+          if (part.length > 0) result.push(part);
+          part = [];
         } else {
           part = includeInResult(result, part, xCoords, yCoords, bbox);
         }
 
       } else { // non-vertical but horizontal segment
         if (yCoords[0] < miny || yCoords[0] > maxy) {
-          part = finishLine(result, part);
+          if (part.length > 0) result.push(part);
+          part = [];
         } else {
           for (i = 0; i < 2; i++) {
             if (xCoords[i] < minx) {
@@ -58,7 +60,8 @@ function index (points, bbox) {
             }
           }
           if ((xCoords[0] - xCoords[1] === 0) && (xCoords[1] - xCoords[0] === 0)) {
-            part = finishLine(result, part);
+            if (part.length > 0) result.push(part);
+            part = [];
           } else {
             part = includeInResult(result, part, xCoords, yCoords, bbox);
           }
@@ -67,15 +70,18 @@ function index (points, bbox) {
     } else {
       if (yCoords[0] === yCoords[1]) {
         if (yCoords[0] < miny || yCoords[0] > maxy) {
-          part = finishLine(result, part);
+          if (part.length > 0) result.push(part);
+          part = [];
         } else if (xCoords[0] < minx || xCoords[0] > maxx) {
-          part = finishLine(result, part);
+          if (part.length > 0) result.push(part);
+          part = [];
         } else {
           part = includeInResult(result, part, xCoords, yCoords, bbox);
         }
       } else if (xCoords[0] < minx || xCoords[0] > maxx) {
-        part = finishLine(result, part);
-      } else {
+          if (part.length > 0) result.push(part);
+          part = [];
+        } else {
         for (i = 0; i < 2; i++) {
           if (yCoords[i] < miny) {
             yCoords[i]  = miny;
@@ -84,7 +90,8 @@ function index (points, bbox) {
           }
         }
         if (yCoords[0] - yCoords[1] === 0 && yCoords[1] - yCoords[0] === 0) {
-          part = finishLine(result, part);
+          if (part.length > 0) result.push(part);
+          part = [];
         } else {
           part = includeInResult(result, part, xCoords, yCoords, bbox);
         }
@@ -110,9 +117,10 @@ function includeInResult(result, part, xCoords, yCoords) {
   }
 }
 
-function finishLine(result, part) {
-  if (part.length > 0) result.push(part);
-  return []
-}
+// Have inlined this for performance gains
+// function finishLine(result, part) {
+//   if (part.length > 0) result.push(part)
+//   return []
+// }
 
 module.exports = index;

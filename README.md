@@ -33,3 +33,5 @@ mapbox/lineclip x 604,637 ops/sec ±0.67% (108 runs sampled)
 ````
 
 kwc-lineclip was initially faster than liang-barsky until I amended the algorithm to support multiple segments.
+
+Memory usage is also slightly less in with this module compared with `lineclip`.

@@ -6,7 +6,8 @@
   "module": "src/index.js",
   "scripts": {
     "bench": "npm run build && node benchmark.js",
-    "build": "rollup src/index.js --o dist/kwc-lineclip.js --f cjs", 
+    "build": "rollup src/index.js --o dist/kwc-lineclip.js --f cjs",
+    "test-memory": "node memoryCheck2.js && node memoryCheck1.js",
     "test": "npm run build && node test/test.js"
   },
   "author": "Rowan Winsemius",
