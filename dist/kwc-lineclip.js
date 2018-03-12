@@ -1,4 +1,8 @@
-'use strict';
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.kwc = factory());
+}(this, (function () { 'use strict';
 
 function index (points, bbox) {
   let pi, m, c, i, xCoords, yCoords;
@@ -123,4 +127,6 @@ function includeInResult(result, part, xCoords, yCoords) {
 //   return []
 // }
 
-module.exports = index;
+return index;
+
+})));
