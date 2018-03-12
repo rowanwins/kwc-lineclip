@@ -1,6 +1,11 @@
 ## kwc-lineclip
 A small javascript lib for clipping polylines by a bounding box.
 
+### Install
+````
+npm install kwc-lineclip
+````
+
 ### API
 ```js
 lineclip(
