@@ -4,20 +4,20 @@ var lb = require('liang-barsky')
 var lineclip = require('lineclip')
 
 const bbox = [-5, -5, 5, 5]
+const a = [-10, -10];
+const b = [10, 10];
+const segment = [a, b];
 
 console.log('SINGLE SEGMENT TEST')
 new Suite('Single Segment')
   .add('kwc', () => {
-    var a = [-10, -10], b = [10, 10]
-    kwc([a, b], bbox)
+    kwc(segment, bbox)
   })
   .add('liang-barsky (non-destructive)', () => {
-    var a = [-10, -10], b = [10, 10]
     lb(a, b, bbox, [-10, -10], [10, 10])
   })
   .add('mapbox/lineclip', () => {
-    var a = [-10, -10], b = [10, 10]
-    lineclip([a, b], bbox)
+    lineclip(segment, bbox)
   })
   .on('cycle', function (event) {
     console.log(event.target.toString())
@@ -31,15 +31,16 @@ new Suite('Single Segment')
   })
   .run({'async': true})
 
+const line = [[-5, 10], [0, -10], [5, 10]];
 
 function runNextSuite() {
   console.log('MULTIPLE SEGMENT MULTIPLE OUTPUT TEST')
   new Suite('Multiple Segments - Multiple Outputs')
     .add('kwc', () => {
-      kwc([[-5, 10], [0, -10], [5, 10]], bbox)
+      kwc(line, bbox)
     })
     .add('mapbox/lineclip', () => {
-      lineclip([[-5, 10], [0, -10], [5, 10]], bbox)
+      lineclip(line, bbox)
     })
     .on('cycle', function (event) {
       console.log(event.target.toString())
@@ -54,20 +55,20 @@ function runNextSuite() {
     .run({'async': true})
 }
 
+const line2 = [
+  [-10, 10], [10, 10], [10, -10], [20, -10], [20, 10], [40, 10],
+  [40, 20], [20, 20], [20, 40], [10, 40], [10, 20], [5, 20], [-10, 20]];
+
+const bbox2 = [0, 0, 30, 30];
+
 function runLongLineSuite() {
   console.log('LONGER LINE')
   new Suite('Longer line')
     .add('kwc', () => {
-      kwc([
-        [-10, 10], [10, 10], [10, -10], [20, -10], [20, 10], [40, 10],
-        [40, 20], [20, 20], [20, 40], [10, 40], [10, 20], [5, 20], [-10, 20]],
-      [0, 0, 30, 30])
+      kwc(line2, bbox2)
     })
     .add('mapbox/lineclip', () => {
-      lineclip([
-        [-10, 10], [10, 10], [10, -10], [20, -10], [20, 10], [40, 10],
-        [40, 20], [20, 20], [20, 40], [10, 40], [10, 20], [5, 20], [-10, 20]],
-      [0, 0, 30, 30])
+      lineclip(line2, bbox2)
     })
     .on('cycle', function (event) {
       console.log(event.target.toString())
